@@ -1,0 +1,8 @@
+# 项目名称
+spring:
+  application:
+    name: AI-tour-Super-intelligent-agent
+server:
+  port: 8127
+  servlet:
+    context-path: /api
