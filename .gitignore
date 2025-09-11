@@ -6,6 +6,7 @@ target/
 
 ### CUSTOM ###
 application-local.yml
+src/main/java/com/zfyedu/aitoursuperintelligentagent/demo/TestApiKey.java
 
 
 ### STS ###
