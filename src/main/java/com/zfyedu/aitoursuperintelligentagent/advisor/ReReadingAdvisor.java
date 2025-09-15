@@ -54,7 +54,21 @@ public class ReReadingAdvisor implements CallAdvisor, StreamAdvisor {
 
     @Override
     public ChatClientResponse adviseCall(ChatClientRequest chatClientRequest, CallAdvisorChain callAdvisorChain) {
-        return null;
+        Map<String, Object> advisedUserParams = new HashMap<>(chatClientRequest.context());
+        advisedUserParams.put("re2_input_query", chatClientRequest.prompt().getUserMessage().getText());
+        //请求拷贝的实现
+        ChatClientRequest re2clientRequest = chatClientRequest
+                .mutate()
+                .prompt(chatClientRequest.prompt())
+                .context(advisedUserParams).build();
+//                .userText("""
+//                        {re2_input_query}
+//                        Read the question again: {re2_input_query}
+//                        """)
+//                .userParams(advisedUserParams)
+//                .build();
+
+        return callAdvisorChain.nextCall(re2clientRequest);
     }
 
     @Override

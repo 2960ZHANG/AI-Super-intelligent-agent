@@ -3,6 +3,7 @@ package com.zfyedu.aitoursuperintelligentagent.app;
 
 
 import com.zfyedu.aitoursuperintelligentagent.advisor.MyLoggerAdvisor;
+import com.zfyedu.aitoursuperintelligentagent.advisor.ReReadingAdvisor;
 import jakarta.annotation.PostConstruct;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -62,6 +63,9 @@ public class LoveApp {
 //                            0
 //
 //                    )
+                        //Re2
+                       // new ReReadingAdvisor(),
+                        //自定义日志
                         new MyLoggerAdvisor()
                 )
                 .call()
