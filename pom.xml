@@ -66,12 +66,27 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.37</version>
         </dependency>
-<!--swagger接口文档-->
+
+        <dependency>
+            <groupId>com.github.victools</groupId>
+            <artifactId>jsonschema-generator</artifactId>
+            <version>4.37.0</version> <!-- 建议检查并使用最新稳定版本 -->
+           <!-- 如果仅测试使用，建议加上 scope -->
+        </dependency>
+
+        <!--swagger接口文档-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
             <version>4.4.0</version>
         </dependency>
+<!--kryo序列化库-->
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>5.6.2</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/com.alibaba/dashscope-sdk-java -->
 

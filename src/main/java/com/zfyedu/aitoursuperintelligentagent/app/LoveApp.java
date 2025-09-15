@@ -5,6 +5,7 @@ package com.zfyedu.aitoursuperintelligentagent.app;
 import com.zfyedu.aitoursuperintelligentagent.advisor.MyLoggerAdvisor;
 import com.zfyedu.aitoursuperintelligentagent.advisor.ReReadingAdvisor;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -21,6 +22,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+@Slf4j
 @Component
 public class LoveApp {
 
@@ -73,6 +77,37 @@ public class LoveApp {
 
         String resultText = chatResponse.getResult().getOutput().getText();
         return resultText;
+    }
+
+
+    /**
+     *  恋爱报告类标题
+     * @param title 报告
+     * @param suggestion 建议
+     */
+    public record LoveReport(String title, List<String> suggestion){}
+
+    public LoveReport doChatWithReport(String message,String chatId) {
+
+        LoveReport report = chatClient.prompt()
+                .system(systemResource + "每次对话后都要生成恋爱结果报告,标题为{用户名}的恋爱报告,内容为建议列表")
+                .user(message)
+                .advisors(
+//                    new SimpleLoggerAdvisor(
+//                            request -> "清纯少年的提问: " + request.prompt().getUserMessage(),
+//                            response -> "超级懂哥的回答 " + response.getResult().getOutput().getText(),
+//                            0
+//
+//                    )
+                        //Re2
+                        // new ReReadingAdvisor(),
+                        //自定义日志
+                        new MyLoggerAdvisor()
+                )
+                .call()
+                .entity(LoveReport.class);
+        log.info("Love report for {} is {}", chatId, report);
+        return report;
     }
 
 }
