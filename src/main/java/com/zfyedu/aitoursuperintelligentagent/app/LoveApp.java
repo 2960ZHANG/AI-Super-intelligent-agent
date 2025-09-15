@@ -2,6 +2,7 @@ package com.zfyedu.aitoursuperintelligentagent.app;
 
 
 
+import com.zfyedu.aitoursuperintelligentagent.advisor.MyLoggerAdvisor;
 import jakarta.annotation.PostConstruct;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -55,12 +56,13 @@ public class LoveApp {
         ChatResponse chatResponse = chatClient.prompt()
                 .user(message)
                 .advisors(
-                    new SimpleLoggerAdvisor(
-                            request -> "清纯少年的提问: " + request.prompt().getUserMessage(),
-                            response -> "超级懂哥的回答 " + response.getResult().getOutput().getText(),
-                            0
-
-                    )
+//                    new SimpleLoggerAdvisor(
+//                            request -> "清纯少年的提问: " + request.prompt().getUserMessage(),
+//                            response -> "超级懂哥的回答 " + response.getResult().getOutput().getText(),
+//                            0
+//
+//                    )
+                        new MyLoggerAdvisor()
                 )
                 .call()
                 .chatResponse();
