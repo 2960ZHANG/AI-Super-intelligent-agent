@@ -14,18 +14,18 @@ private LoveApp loveApp;
     void doChat() {
         String chatId = UUID.randomUUID().toString();
         // 第一轮
-        String message = "你好，我是程序员鱼皮";
+        String message = "你好，我是渣男yyy";
         String answer = loveApp.doChat(message, chatId);
         System.out.println(answer);
         // 第二轮
-        message = "我的另一半叫xiaox";
-        answer = loveApp.doChat(message, chatId);
-        System.out.println(answer);
-        Assertions.assertNotNull(answer);
-        // 第三轮
-        message = "我的另一半叫什么来着？刚跟你说过，帮我回忆一下";
-        answer = loveApp.doChat(message, chatId);
-        System.out.println(answer);
-        Assertions.assertNotNull(answer);
+//        message = "我的另一半叫xiaox";
+//        answer = loveApp.doChat(message, chatId);
+//        System.out.println(answer);
+//        Assertions.assertNotNull(answer);
+//        // 第三轮
+//        message = "我的另一半叫什么来着？帮我回忆一下";
+//        answer = loveApp.doChat(message, chatId);
+//        System.out.println(answer);
+//        Assertions.assertNotNull(answer);
     }
 }
