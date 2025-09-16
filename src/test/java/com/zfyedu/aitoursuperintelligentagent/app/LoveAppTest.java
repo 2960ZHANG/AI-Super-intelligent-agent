@@ -16,8 +16,12 @@ private LoveApp loveApp;
     void doChatWithReport() {
         String chatId = UUID.randomUUID().toString();
         // 第一轮
-        String message = "你好，我是大学生p皮，我想让另一半vvv更爱我，但我不知道该怎么做";
+        String message = "你好，我是大学生ax，我想让另一半vvv更爱我，但我不知道该怎么做";
         LoveApp.LoveReport loveReport = loveApp.doChatWithReport(message, chatId);
+        Assertions.assertNotNull(loveReport);
+        // 第二轮
+     message = "我是谁？";
+         loveReport = loveApp.doChatWithReport(message, chatId);
         Assertions.assertNotNull(loveReport);
     }
 

@@ -6,6 +6,8 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.ChatMemoryRepository;
+import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
 import org.springframework.ai.chat.messages.Message;
 
 import java.io.File;
@@ -19,8 +21,10 @@ import java.util.List;
  * 基于文件持久化的对话记忆
  */
 public class FileBasedChatMemory implements ChatMemory {
-
-    private final String BASE_DIR;
+    private static final int DEFAULT_MAX_MESSAGES = 20;
+    private  ChatMemoryRepository chatMemoryRepository;
+    private  int maxMessages;
+    private  String BASE_DIR;
     private static final Kryo kryo = new Kryo();
 
     static {
@@ -30,12 +34,19 @@ public class FileBasedChatMemory implements ChatMemory {
     }
 
     // 构造对象时，指定文件保存目录
-    public FileBasedChatMemory(String dir) {
+    public  FileBasedChatMemory(String dir) {
         this.BASE_DIR = dir;
         File baseDir = new File(dir);
         if (!baseDir.exists()) {
             baseDir.mkdirs();
         }
+    }
+
+
+    public FileBasedChatMemory(ChatMemoryRepository chatMemoryRepository, int maxMessages) {
+        this.chatMemoryRepository = chatMemoryRepository;
+        this.maxMessages = maxMessages;
+
     }
 
     @Override
@@ -91,5 +102,35 @@ public class FileBasedChatMemory implements ChatMemory {
 
     private File getConversationFile(String conversationId) {
         return new File(BASE_DIR, conversationId + ".kryo");
+    }
+
+    public  Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private ChatMemoryRepository chatMemoryRepository;
+        private int maxMessages = 20;
+
+        private Builder() {
+        }
+
+        public Builder chatMemoryRepository(ChatMemoryRepository chatMemoryRepository) {
+            this.chatMemoryRepository = chatMemoryRepository;
+            return this;
+        }
+
+        public Builder maxMessages(int maxMessages) {
+            this.maxMessages = maxMessages;
+            return this;
+        }
+
+        public FileBasedChatMemory build() {
+            if (this.chatMemoryRepository == null) {
+                this.chatMemoryRepository = new InMemoryChatMemoryRepository();
+            }
+
+            return new FileBasedChatMemory(this.chatMemoryRepository, this.maxMessages );
+        }
     }
 }

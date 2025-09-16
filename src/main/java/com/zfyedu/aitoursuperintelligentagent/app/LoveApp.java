@@ -50,9 +50,9 @@ public class LoveApp {
             throw new IllegalStateException("System resource is not loaded. Check if the file exists at: classpath:/tem/prompts/system-message.txt");
         }
         //会话记忆
-        //ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
+       //ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
         //基于文件的会话记忆
-        ChatMemory chatMemory = new FileBasedChatMemory(System.getProperty("user.dir") + "/chat-memory");
+        ChatMemory chatMemory = new FileBasedChatMemory(System.getProperty("user.dir") + "/chat-memory").builder().build();
         chatClient = ChatClient.builder(dashScopeChatModel)
                 .defaultSystem(systemResource)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
