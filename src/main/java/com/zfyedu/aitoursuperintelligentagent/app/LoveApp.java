@@ -4,6 +4,7 @@ package com.zfyedu.aitoursuperintelligentagent.app;
 
 import com.zfyedu.aitoursuperintelligentagent.advisor.MyLoggerAdvisor;
 import com.zfyedu.aitoursuperintelligentagent.advisor.ReReadingAdvisor;
+import com.zfyedu.aitoursuperintelligentagent.chatmemory.FileBasedChatMemory;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -49,7 +50,9 @@ public class LoveApp {
             throw new IllegalStateException("System resource is not loaded. Check if the file exists at: classpath:/tem/prompts/system-message.txt");
         }
         //会话记忆
-        ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
+        //ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
+        //基于文件的会话记忆
+        ChatMemory chatMemory = new FileBasedChatMemory(System.getProperty("user.dir") + "/chat-memory");
         chatClient = ChatClient.builder(dashScopeChatModel)
                 .defaultSystem(systemResource)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())

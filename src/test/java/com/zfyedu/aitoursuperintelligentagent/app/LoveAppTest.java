@@ -21,4 +21,13 @@ private LoveApp loveApp;
         Assertions.assertNotNull(loveReport);
     }
 
+    @Test
+    void doChatWithReport2() {
+        String chatId = UUID.randomUUID().toString();
+        // 第一轮
+        String message = "我是谁？";
+        LoveApp.LoveReport loveReport = loveApp.doChatWithReport(message, chatId);
+        Assertions.assertNotNull(loveReport);
+    }
+
 }
