@@ -29,7 +29,7 @@ public class LoveAppDocumentLoad {
         ArrayList<Document> documents = new ArrayList<>();
         //加载全部的文档
         try {
-            Resource[] resources = resource.getResources("classpath:document/*.md");
+            Resource[] resources = resource.getResources("classpath:document/love/*.md");
             //添加文档进列表
             for (Resource resource : resources) {
                 String filename = resource.getFilename();

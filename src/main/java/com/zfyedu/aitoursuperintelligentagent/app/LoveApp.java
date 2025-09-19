@@ -30,7 +30,7 @@ public class LoveApp {
     private ChatClient chatClient;
 
 
-    @Value("classpath:/tem/prompts/system-message.txt")
+    @Value("classpath:/tem/prompts/system-message-love.txt")
     private Resource systemResource;
 
 
@@ -45,7 +45,7 @@ public class LoveApp {
     public void init() {
         // 确保 systemResource 不为 null
         if (systemResource == null) {
-            throw new IllegalStateException("System resource is not loaded. Check if the file exists at: classpath:/tem/prompts/system-message.txt");
+            throw new IllegalStateException("System resource is not loaded. Check if the file exists at: classpath:/tem/prompts/system-message-love.txt");
         }
         //会话记忆
         //ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
