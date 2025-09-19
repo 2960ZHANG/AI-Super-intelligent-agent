@@ -67,6 +67,13 @@
             <version>5.8.37</version>
         </dependency>
 
+        <!--Markdown文档读取器 https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-markdown-document-reader -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-markdown-document-reader</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
         <dependency>
             <groupId>com.github.victools</groupId>
             <artifactId>jsonschema-generator</artifactId>
