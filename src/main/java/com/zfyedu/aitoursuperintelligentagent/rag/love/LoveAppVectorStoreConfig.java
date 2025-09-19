@@ -1,4 +1,4 @@
-package com.zfyedu.aitoursuperintelligentagent.rag;
+package com.zfyedu.aitoursuperintelligentagent.rag.love;
 
 import jakarta.annotation.Resource;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -14,11 +14,11 @@ public class LoveAppVectorStoreConfig {
     private  LoveAppDocumentLoad loveAppDocumentLoad;
 
     @Bean
-    VectorStore loveAppVectorStore(EmbeddingModel deshSopeEmbeddingModel) {
-        SimpleVectorStore vectorStore = SimpleVectorStore.builder(deshSopeEmbeddingModel).build();
+ public  VectorStore loveAppVectorStore(EmbeddingModel deshSopeEmbeddingModel) {
+        SimpleVectorStore loveVectorStore = SimpleVectorStore.builder(deshSopeEmbeddingModel).build();
         //添加所有读取到的文档
-        vectorStore.doAdd(loveAppDocumentLoad.loadMarkdown());
-            return vectorStore;
+        loveVectorStore.doAdd(loveAppDocumentLoad.loadMarkdown());
+            return loveVectorStore;
 
     }
 }

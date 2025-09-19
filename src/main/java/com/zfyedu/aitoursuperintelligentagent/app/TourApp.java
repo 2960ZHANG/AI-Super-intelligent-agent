@@ -1,6 +1,5 @@
 package com.zfyedu.aitoursuperintelligentagent.app;
 
-
 import com.zfyedu.aitoursuperintelligentagent.advisor.MyLoggerAdvisor;
 import com.zfyedu.aitoursuperintelligentagent.chatmemory.FileBasedChatMemory;
 import jakarta.annotation.PostConstruct;
@@ -15,30 +14,28 @@ import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-@Slf4j
 @Component
-public class LoveApp {
+@Slf4j
+public class TourApp {
 
     @jakarta.annotation.Resource
-    @Qualifier("loveAppVectorStore") private VectorStore simpleVectorStore;
+    @Qualifier("tourAppVectorStore")  private VectorStore simpleVectorStore;
     private final ChatModel dashScopeChatModel;
     private ChatClient chatClient;
 
 
-    @Value("classpath:/tem/prompts/system-message-love.txt")
+    @Value("classpath:/tem/prompts/system-message-tour.txt")
     private Resource systemResource;
 
 
 
     SystemPromptTemplate systemPromptTemplate;
 
-    public LoveApp(ChatModel dashScopeChatModel) {
+    public TourApp(ChatModel dashScopeChatModel) {
         this.dashScopeChatModel = dashScopeChatModel;
     }
 
@@ -46,7 +43,7 @@ public class LoveApp {
     public void init() {
         // 确保 systemResource 不为 null
         if (systemResource == null) {
-            throw new IllegalStateException("System resource is not loaded. Check if the file exists at: classpath:/tem/prompts/system-message-love.txt");
+            throw new IllegalStateException("System resource is not loaded. Check if the file exists at: classpath:/tem/prompts/system-message-Tour.txt");
         }
         //会话记忆
         //ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
@@ -83,18 +80,18 @@ public class LoveApp {
 
 
     /**
-     * 恋爱报告类标题
+     * 旅行计划报告类标题
      *
      * @param title      报告
      * @param suggestion 建议
      */
-    public record LoveReport(String title, List<String> suggestion) {
+    public record TourReport(String title, List<String> suggestion) {
     }
 
-    public LoveReport doChatWithReport(String message, String chatId) {
+    public TourReport doChatWithReport(String message, String chatId) {
 
-        LoveReport report = chatClient.prompt()
-                .system(systemResource + "每次对话后都要生成恋爱结果报告,标题为{用户名}的恋爱报告,内容为建议列表")
+        TourApp.TourReport report = chatClient.prompt()
+                .system(systemResource + "每次对话后都要生成旅行计划结果报告,标题为{用户名}的旅行计划报告,内容为建议列表")
                 .user(message)
                 .advisors(
 //                    new SimpleLoggerAdvisor(
@@ -109,8 +106,8 @@ public class LoveApp {
                         new MyLoggerAdvisor()
                 )
                 .call()
-                .entity(LoveReport.class);
-        log.info("Love report for {} is {}", chatId, report);
+                .entity(TourApp.TourReport.class);
+        log.info("Tour report for {} is {}", chatId, report);
         return report;
     }
 
