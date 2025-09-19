@@ -1,23 +1,18 @@
 package com.zfyedu.aitoursuperintelligentagent.app;
 
 
-
 import com.zfyedu.aitoursuperintelligentagent.advisor.MyLoggerAdvisor;
-import com.zfyedu.aitoursuperintelligentagent.advisor.ReReadingAdvisor;
 import com.zfyedu.aitoursuperintelligentagent.chatmemory.FileBasedChatMemory;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.ChatMemoryRepository;
-import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
-import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.core.io.Resource;
@@ -29,7 +24,9 @@ import java.util.List;
 @Component
 public class LoveApp {
 
-    private  ChatModel dashScopeChatModel;
+    @jakarta.annotation.Resource
+    private VectorStore simpleVectorStore;
+    private final ChatModel dashScopeChatModel;
     private ChatClient chatClient;
 
 
@@ -37,10 +34,11 @@ public class LoveApp {
     private Resource systemResource;
 
 
+
     SystemPromptTemplate systemPromptTemplate;
 
     public LoveApp(ChatModel dashScopeChatModel) {
-            this.dashScopeChatModel = dashScopeChatModel;
+        this.dashScopeChatModel = dashScopeChatModel;
     }
 
     @PostConstruct
@@ -50,7 +48,7 @@ public class LoveApp {
             throw new IllegalStateException("System resource is not loaded. Check if the file exists at: classpath:/tem/prompts/system-message.txt");
         }
         //会话记忆
-       //ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
+        //ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
         //基于文件的会话记忆
         ChatMemory chatMemory = new FileBasedChatMemory(System.getProperty("user.dir") + "/chat-memory").builder().build();
         chatClient = ChatClient.builder(dashScopeChatModel)
@@ -59,7 +57,7 @@ public class LoveApp {
                 .build();
     }
 
-    public String doChat(String message,String chatId) {
+    public String doChat(String message, String chatId) {
 
         ChatResponse chatResponse = chatClient.prompt()
                 .user(message)
@@ -71,7 +69,7 @@ public class LoveApp {
 //
 //                    )
                         //Re2
-                       // new ReReadingAdvisor(),
+                        // new ReReadingAdvisor(),
                         //自定义日志
                         new MyLoggerAdvisor()
                 )
@@ -84,13 +82,15 @@ public class LoveApp {
 
 
     /**
-     *  恋爱报告类标题
-     * @param title 报告
+     * 恋爱报告类标题
+     *
+     * @param title      报告
      * @param suggestion 建议
      */
-    public record LoveReport(String title, List<String> suggestion){}
+    public record LoveReport(String title, List<String> suggestion) {
+    }
 
-    public LoveReport doChatWithReport(String message,String chatId) {
+    public LoveReport doChatWithReport(String message, String chatId) {
 
         LoveReport report = chatClient.prompt()
                 .system(systemResource + "每次对话后都要生成恋爱结果报告,标题为{用户名}的恋爱报告,内容为建议列表")
@@ -113,4 +113,19 @@ public class LoveApp {
         return report;
     }
 
+
+    public String doChatWithRAG(String message, String chatId) {
+        ChatResponse chatResponse = chatClient.prompt()
+                .user(message)
+
+                .advisors(
+                        new MyLoggerAdvisor(),
+                        new QuestionAnswerAdvisor(simpleVectorStore)
+                )
+                .call()
+                .chatResponse();
+        String text = chatResponse.getResult().getOutput().getText();
+
+        return text;
+    }
 }

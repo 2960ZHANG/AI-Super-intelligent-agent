@@ -21,5 +21,7 @@ class LoveAppVectorStoreConfigTest {
     void loveAppVectorStore() {
         VectorStore vectorStore = loveAppVectorStoreConfig.loveAppVectorStore(deshSopeEmbeddingModel);
         assertNotNull(vectorStore);
+
+
     }
 }
