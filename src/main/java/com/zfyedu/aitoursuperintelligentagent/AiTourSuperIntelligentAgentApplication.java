@@ -1,5 +1,6 @@
 package com.zfyedu.aitoursuperintelligentagent;
 
+import com.zfyedu.aitoursuperintelligentagent.config.PgVectorStoreConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

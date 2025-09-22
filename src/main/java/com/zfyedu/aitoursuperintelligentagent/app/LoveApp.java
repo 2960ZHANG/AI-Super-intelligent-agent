@@ -7,8 +7,10 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
@@ -29,7 +31,8 @@ public class LoveApp {
     @Qualifier("loveAppVectorStore") private VectorStore simpleVectorStore;
     private final ChatModel dashScopeChatModel;
     private ChatClient chatClient;
-
+    @jakarta.annotation.Resource
+    @Qualifier("pgVectorStore") private VectorStore pgVectorStore;
 
     @Value("classpath:/tem/prompts/system-message-love.txt")
     private Resource systemResource;
@@ -49,9 +52,9 @@ public class LoveApp {
             throw new IllegalStateException("System resource is not loaded. Check if the file exists at: classpath:/tem/prompts/system-message-love.txt");
         }
         //会话记忆
-        //ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
+        ChatMemory chatMemory = MessageWindowChatMemory.builder().maxMessages(20).build();
         //基于文件的会话记忆
-        ChatMemory chatMemory = new FileBasedChatMemory(System.getProperty("user.dir") + "/chat-memory").builder().build();
+        //ChatMemory chatMemory = new FileBasedChatMemory(System.getProperty("user.dir") + "/chat-memory").builder().build();
         chatClient = ChatClient.builder(dashScopeChatModel)
                 .defaultSystem(systemResource)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
@@ -97,16 +100,16 @@ public class LoveApp {
                 .system(systemResource + "每次对话后都要生成恋爱结果报告,标题为{用户名}的恋爱报告,内容为建议列表")
                 .user(message)
                 .advisors(
-//                    new SimpleLoggerAdvisor(
-//                            request -> "清纯少年的提问: " + request.prompt().getUserMessage(),
-//                            response -> "超级懂哥的回答 " + response.getResult().getOutput().getText(),
-//                            0
-//
-//                    )
+                    new SimpleLoggerAdvisor(
+                            request -> "清纯少年的提问: " + request.prompt().getUserMessage(),
+                            response -> "超级懂哥的回答 " + response.getResult().getOutput().getText(),
+                            0
+
+                    )
                         //Re2
                         // new ReReadingAdvisor(),
                         //自定义日志
-                        new MyLoggerAdvisor()
+                        //new MyLoggerAdvisor()
                 )
                 .call()
                 .entity(LoveReport.class);
@@ -115,18 +118,26 @@ public class LoveApp {
     }
 
 
-    public String doChatWithRAG(String message, String chatId) {
-        ChatResponse chatResponse = chatClient.prompt()
+    public LoveReport doChatWithRAG(String message, String chatId) {
+        LoveReport loveReport = chatClient.prompt()
+//                .system(systemResource + "每次对话后都要生成恋爱结果报告,标题为{用户名}的恋爱报告,内容为建议列表")
                 .user(message)
 
                 .advisors(
-                        new MyLoggerAdvisor(),
-                        new QuestionAnswerAdvisor(simpleVectorStore)
-                )
-                .call()
-                .chatResponse();
-        String text = chatResponse.getResult().getOutput().getText();
+                        new SimpleLoggerAdvisor(
+                                request -> "清纯少年的提问: " + request.prompt().getUserMessage(),
+                                response -> "超级懂哥的回答 " + response.getResult().getOutput().getText(),
+                                0
 
-        return text;
+                        ),
+//                        new MyLoggerAdvisor(),
+                        new QuestionAnswerAdvisor(pgVectorStore)
+                )
+
+                .call()
+                .entity(LoveReport.class);
+
+
+        return loveReport;
     }
 }

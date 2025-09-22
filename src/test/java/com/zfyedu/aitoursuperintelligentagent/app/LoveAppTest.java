@@ -20,7 +20,7 @@ private LoveApp loveApp;
         LoveApp.LoveReport loveReport = loveApp.doChatWithReport(message, chatId);
         Assertions.assertNotNull(loveReport);
         // 第二轮
-     message = "我是谁？";
+        message = "我是谁？";
          loveReport = loveApp.doChatWithReport(message, chatId);
         Assertions.assertNotNull(loveReport);
     }
@@ -37,9 +37,13 @@ private LoveApp loveApp;
     @Test
     void doChatWithRag() {
         String chatId = UUID.randomUUID().toString();
-        String message = "我现在是单身，给我推荐一些恋爱对象，我喜欢摄影";
-        String answer =  loveApp.doChatWithRAG(message, chatId);
-        Assertions.assertNotNull(answer);
+        String message = "我叫猴子";
+        LoveApp.LoveReport loveReport = loveApp.doChatWithRAG(message, chatId);
+      ;
+        message = "忘记了我是谁？";
+        loveReport = loveApp.doChatWithRAG(message, chatId);
+
+        Assertions.assertNotNull(loveReport);
     }
 
 }
