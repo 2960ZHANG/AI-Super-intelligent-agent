@@ -13,19 +13,20 @@ private LoveApp loveApp;
     @Test
     void doChat() {
         String chatId = UUID.randomUUID().toString();
+        String loveReport;
         // 第一轮
         String message = "你好，我是渣男ppp";
-        String answer = loveApp.doChat(message, chatId);
-        System.out.println(answer);
+         loveReport = loveApp.doChatWithRAG(message, chatId);
+        System.out.println(loveReport);
         // 第二轮
         message = "我的另一半叫xiaox";
-        answer = loveApp.doChat(message, chatId);
-        System.out.println(answer);
-        Assertions.assertNotNull(answer);
+        loveReport = loveApp.doChatWithRAG(message, chatId);
+        System.out.println(loveReport);
+        Assertions.assertNotNull(loveReport);
         // 第三轮
         message = "我的另一半叫什么来着？帮我回忆一下";
-        answer = loveApp.doChat(message, chatId);
-        System.out.println(answer);
-        Assertions.assertNotNull(answer);
+        loveReport = loveApp.doChatWithRAG(message, chatId);
+        System.out.println(loveReport);
+        Assertions.assertNotNull(loveReport);
     }
 }

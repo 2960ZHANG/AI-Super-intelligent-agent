@@ -37,10 +37,10 @@ private LoveApp loveApp;
     @Test
     void doChatWithRag() {
         String chatId = UUID.randomUUID().toString();
-        String message = "我叫猴子";
-        LoveApp.LoveReport loveReport = loveApp.doChatWithRAG(message, chatId);
+        String message = "我叫ggbob,我要去旅游";
+        String loveReport = loveApp.doChatWithRAG(message, chatId);
       ;
-        message = "忘记了我是谁？";
+        message = "我叫什么？";
         loveReport = loveApp.doChatWithRAG(message, chatId);
 
         Assertions.assertNotNull(loveReport);
