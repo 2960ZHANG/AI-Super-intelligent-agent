@@ -2,6 +2,7 @@ package com.zfyedu.aitoursuperintelligentagent.app;
 
 
 import com.zfyedu.aitoursuperintelligentagent.advisor.MyLoggerAdvisor;
+import com.zfyedu.aitoursuperintelligentagent.config.ToolRegistration;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -15,6 +16,7 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.template.st.StTemplateRenderer;
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +41,9 @@ public class LoveApp {
 
     @Value("classpath:/tem/prompts/system-message-love.txt")
     private Resource systemResource;
+    //工具
+    @jakarta.annotation.Resource
+    private ToolCallback[] allTools;
     // 存储每个会话的 ChatMemory
     private final Map<String, ChatMemory> chatMemories = new ConcurrentHashMap<>();
 
@@ -86,7 +91,7 @@ public class LoveApp {
                         //Re2
                         // new ReReadingAdvisor(),
                         //自定义日志
-                        new MyLoggerAdvisor()
+                        //new MyLoggerAdvisor()
                 )
                 .call()
                 .chatResponse();
@@ -179,5 +184,26 @@ public class LoveApp {
 
 
         return response;
+    }
+
+
+    public String doCharWithTools(String message, String chatId) {
+
+        ChatMemory chatMemory = chatMemories.computeIfAbsent(chatId,
+                id -> MessageWindowChatMemory.builder().maxMessages(20).build());
+
+
+        ChatResponse chatResponse = chatClient.prompt()
+                .user(message)
+                .advisors(
+                   MessageChatMemoryAdvisor.builder(chatMemory).build()
+                )
+                .toolCallbacks(allTools)
+                .call()
+
+                .chatResponse();
+
+        String resultText = chatResponse.getResult().getOutput().getText();
+        return resultText;
     }
 }
