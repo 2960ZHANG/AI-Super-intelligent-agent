@@ -6,11 +6,12 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.zfyedu.aitoursuperintelligentagent.demo.TestApiKey;
+
 
 /**
  * 阿里云DashScope API调用工具类（基于Hutool封装）
  */
+@Deprecated
 public class HttpInvoke {
 
     // API请求地址
@@ -74,7 +75,7 @@ public class HttpInvoke {
     // 测试示例
     public static void main(String[] args) {
         // 从环境变量获取API密钥（实际项目建议用配置文件）
-        String apiKey = TestApiKey.API_KEY;
+        String apiKey = "TestApiKey.API_KEY";
         if (StrUtil.isBlank(apiKey)) {
             System.out.println("请先设置环境变量DASHSCOPE_API_KEY");
             return;

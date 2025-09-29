@@ -80,6 +80,14 @@
             <version>1.19.1</version>
         </dependency>
 
+        <!--MCP客服端-->
+        <!-- https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-mcp -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-mcp</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
         <!--Markdown文档读取器 https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-markdown-document-reader -->
         <dependency>
             <groupId>org.springframework.ai</groupId>

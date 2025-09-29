@@ -37,7 +37,7 @@ private LoveApp loveApp;
     @Test
     void doChatWithRag() {
         String chatId = UUID.randomUUID().toString();
-        String message = "我叫AAjob,我要去旅游";
+        String message = "我叫猪猪侠,我要去旅游";
         String loveReport = loveApp.doChatWithRAG(message, chatId);
       ;
         message = "我叫什么？";
@@ -48,7 +48,21 @@ private LoveApp loveApp;
         message = "我想问一下青岛旅行几月份去比较好";
         loveReport = loveApp.doChatWithRAG(message, chatId);
 
+        message = "我叫什么？";
+        loveReport = loveApp.doChatWithRAG(message, chatId);
+
+
         Assertions.assertNotNull(loveReport);
     }
 
+
+
+    @Test
+    void doCharWithTools() {
+        String chatId = UUID.randomUUID().toString();
+        String message = "我想知道2022年的奥运会地址";
+        String s = loveApp.doCharWithTools(message, chatId);
+        Assertions.assertNotNull(s);
+
+    }
 }

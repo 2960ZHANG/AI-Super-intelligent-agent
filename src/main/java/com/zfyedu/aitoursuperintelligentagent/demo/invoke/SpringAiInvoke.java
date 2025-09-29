@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 //@Component
+@Deprecated
 public class SpringAiInvoke implements CommandLineRunner {
 
     @Resource

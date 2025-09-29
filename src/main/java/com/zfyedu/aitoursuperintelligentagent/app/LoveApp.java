@@ -1,8 +1,6 @@
 package com.zfyedu.aitoursuperintelligentagent.app;
 
 
-import com.zfyedu.aitoursuperintelligentagent.advisor.MyLoggerAdvisor;
-import com.zfyedu.aitoursuperintelligentagent.config.ToolRegistration;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -116,12 +114,6 @@ public class LoveApp {
                 .system(systemResource + "每次对话后都要生成恋爱结果报告,标题为{用户名}的恋爱报告,内容为建议列表")
                 .user(message)
                 .advisors(
-                    new SimpleLoggerAdvisor(
-                            request -> "清纯少年的提问: " + request.prompt().getUserMessage(),
-                            response -> "超级懂哥的回答 " + response.getResult().getOutput().getText(),
-                            0
-
-                    )
                         //Re2
                         // new ReReadingAdvisor(),
                         //自定义日志
